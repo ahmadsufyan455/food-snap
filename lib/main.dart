@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:food_snap/services/image_classification_service.dart';
+import 'package:food_snap/theme/app_colors.dart';
 import 'package:food_snap/ui/camera_page.dart';
 import 'package:food_snap/ui/detail_page.dart';
 import 'package:food_snap/ui/home_page.dart';
 import 'package:food_snap/ui/result_page.dart';
+import 'package:food_snap/viewmodels/home_viewmodel.dart';
 import 'package:food_snap/viewmodels/image_classification_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -21,14 +23,19 @@ class MainApp extends StatelessWidget {
         Provider(create: (_) => ImageClassificationService()),
         ChangeNotifierProvider(
           create:
-              (_) => ImageClassificationViewmodel(
+              (context) => ImageClassificationViewmodel(
                 context.read<ImageClassificationService>(),
               ),
         ),
+        ChangeNotifierProvider(create: (_) => HomeViewmodel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(useMaterial3: true),
+        theme: ThemeData(
+          useMaterial3: true,
+          scaffoldBackgroundColor: AppColors.secondary,
+          appBarTheme: AppBarTheme(backgroundColor: Colors.transparent),
+        ),
         initialRoute: HomePage.route,
         routes: {
           HomePage.route: (context) => HomePage(),
