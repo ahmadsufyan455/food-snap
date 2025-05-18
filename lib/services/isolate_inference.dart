@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:isolate';
+import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:food_snap/utils/image_utils.dart';
@@ -27,9 +28,14 @@ class IsolateInference {
     sendPort.send(port.sendPort);
 
     await for (final InferenceModel isolateModel in port) {
-      final cameraImage = isolateModel.cameraImage!;
+      final imagePath = isolateModel.imageBytes;
+      final cameraImage = isolateModel.cameraImage;
       final inputShape = isolateModel.inputShape;
-      final imageMatrix = await _imagePreProcessing(cameraImage, inputShape);
+      final imageMatrix = await _imagePreProcessing(
+        imagePath,
+        cameraImage,
+        inputShape,
+      );
 
       final input = imageMatrix;
       final output = [List<int>.filled(isolateModel.outputShape[1], 0)];
@@ -50,11 +56,15 @@ class IsolateInference {
   }
 
   static Future<List<List<List<List<num>>>>> _imagePreProcessing(
-    CameraImage cameraImage,
+    Uint8List? imageBytes,
+    CameraImage? cameraImage,
     List<int> inputShape,
   ) async {
     image_lib.Image? img;
-    img = ImageUtils.convertCameraImage(cameraImage);
+    img =
+        cameraImage != null
+            ? ImageUtils.convertCameraImage(cameraImage)
+            : (imageBytes != null ? image_lib.decodeImage(imageBytes) : null);
     if (img == null) throw Exception("Failed to decode image");
 
     image_lib.Image imageInput = image_lib.copyResize(
@@ -99,6 +109,7 @@ class IsolateInference {
 }
 
 class InferenceModel {
+  Uint8List? imageBytes;
   CameraImage? cameraImage;
   int interpreterAddress;
   List<String> labels;
@@ -107,6 +118,7 @@ class InferenceModel {
   late SendPort responsePort;
 
   InferenceModel(
+    this.imageBytes,
     this.cameraImage,
     this.interpreterAddress,
     this.labels,

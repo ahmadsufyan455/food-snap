@@ -65,9 +65,11 @@ class _ResultPageState extends State<ResultPage> {
       builder: (_, viewModel, __) {
         final result = viewModel.classification;
         if (result == null) return const SizedBox.shrink();
-        context.read<NutritionViewmodel>().generateNutritionFacts(
-          foodName: result.label,
-        );
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.read<NutritionViewmodel>().generateNutritionFacts(
+            foodName: result.label,
+          );
+        });
         return Column(
           children: [
             Text(
@@ -98,7 +100,7 @@ class _ResultPageState extends State<ResultPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Nutrition Facts',
+          'Nutrition Facts / 100 g',
           style: TextStyle(
             color: AppColors.primary,
             fontSize: 24,

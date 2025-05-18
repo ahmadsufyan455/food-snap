@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:food_snap/models/classification_model.dart';
@@ -16,24 +18,35 @@ class ImageClassificationViewmodel extends ChangeNotifier {
   ClassificationModel? _classification;
   ClassificationModel? get classification => _classification;
 
-  Future<void> runClassificationFromPath(String imagePath) async {
+  Future<void> runClassificationFromFile(String imagePath) async {
     _isLoading = true;
     notifyListeners();
 
-    await initializeIfNeeded();
+    try {
+      await initializeIfNeeded();
 
-    final results = await _service.runInferenceFromImagePath(imagePath);
-    final classifications =
-        results.map((e) => e.toModel(_service.labels)).toList();
-    _classification = classifications[0];
-    _isLoading = false;
-    notifyListeners();
+      final imageBytes = await File(imagePath).readAsBytes();
+      final results = await _service.inferenceObject(imageBytes, null);
+
+      final classifications =
+          results.map((e) => e.toModel(_service.labels)).toList();
+
+      if (classifications.isNotEmpty) {
+        _classification = classifications[0];
+      }
+    } catch (e) {
+      debugPrint('Error during classification: $e');
+      _classification = null;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> runClassificationFromCamera(CameraImage camera) async {
     await initializeIfNeeded();
 
-    final results = await _service.inferenceCameraFrame(camera);
+    final results = await _service.inferenceObject(null, camera);
     final classifications =
         results.map((e) => e.toModel(_service.labels)).toList();
     _classification = classifications[0];

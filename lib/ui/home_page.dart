@@ -138,7 +138,7 @@ class _AnalyzeButton extends StatelessWidget {
         return AppButton(
           label: 'Analyze',
           onPressed: () async {
-            await classificationVM.runClassificationFromPath(imagePath);
+            await classificationVM.runClassificationFromFile(imagePath);
             if (!context.mounted) return;
             Navigator.pushNamed(context, ResultPage.route);
           },
