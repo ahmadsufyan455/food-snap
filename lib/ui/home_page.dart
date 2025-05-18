@@ -96,19 +96,36 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SizedBox(height: 16),
-                AppButton(
-                  label: 'Analyze',
-                  onPressed: () {
-                    context
-                        .read<ImageClassificationViewmodel>()
-                        .runClassification(imagePath!)
-                        .then((_) {
-                          if (!mounted) return;
-                          Navigator.pushNamed(context, ResultPage.route);
-                        });
+                Consumer<ImageClassificationViewmodel>(
+                  builder: (context, value, _) {
+                    if (value.isLoading) {
+                      return Center(
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: const CircularProgressIndicator(
+                            color: AppColors.primary,
+                            strokeWidth: 3,
+                          ),
+                        ),
+                      );
+                    }
+                    return AppButton(
+                      label: 'Analyze',
+                      onPressed: () {
+                        context
+                            .read<ImageClassificationViewmodel>()
+                            .runClassification(imagePath!)
+                            .then((_) {
+                              if (!context.mounted) return;
+                              Navigator.pushNamed(context, ResultPage.route);
+                            });
+                      },
+                      paddingSize: 8,
+                      fontSize: 18,
+                      icon: Icons.search_rounded,
+                    );
                   },
-                  paddingSize: 8,
-                  fontSize: 18,
                 ),
                 SizedBox(height: 8),
                 AppButton(
@@ -117,6 +134,7 @@ class _HomePageState extends State<HomePage> {
                   isOutline: true,
                   paddingSize: 8,
                   fontSize: 18,
+                  icon: Icons.clear_rounded,
                 ),
               ],
             )

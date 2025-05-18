@@ -9,11 +9,16 @@ class ImageClassificationViewmodel extends ChangeNotifier {
   ImageClassificationViewmodel(this._service);
 
   bool _isInitialized = false;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   ClassificationModel? _classification;
   ClassificationModel? get classification => _classification;
 
   Future<void> runClassification(String imagePath) async {
+    _isLoading = true;
+    notifyListeners();
+
     if (!_isInitialized) {
       await _service.initHelper();
       _isInitialized = true;
@@ -26,6 +31,7 @@ class ImageClassificationViewmodel extends ChangeNotifier {
     final classifications =
         results.map((e) => e.toModel(_service.labels)).toList();
     _classification = classifications[0];
+    _isLoading = false;
     notifyListeners();
   }
 }
