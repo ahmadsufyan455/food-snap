@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'dart:isolate';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 import 'package:food_snap/dtos/classification_result_dto.dart';
+import 'package:food_snap/services/isolate_inference.dart';
 import 'package:image/image.dart' as image_lib;
 import 'package:tflite_flutter/tflite_flutter.dart';
 
@@ -13,6 +16,7 @@ class ImageClassificationService {
   late final List<String> labels;
   late Tensor inputTensor;
   late Tensor outputTensor;
+  late final IsolateInference isolateInference;
 
   Future<void> _loadModel() async {
     final options =
@@ -32,6 +36,9 @@ class ImageClassificationService {
   Future<void> initHelper() async {
     await _loadModel();
     await _loadLabels();
+
+    isolateInference = IsolateInference();
+    await isolateInference.start();
   }
 
   static Future<List<List<List<List<num>>>>> _imagePreProcessing(
@@ -94,5 +101,37 @@ class ImageClassificationService {
           return ClassificationResultDto(index: e.key, score: e.value / 255.0);
         }).toList();
     return topResults;
+  }
+
+  Future<List<ClassificationResultDto>> inferenceCameraFrame(
+    CameraImage cameraImage,
+  ) async {
+    var isolateModel = InferenceModel(
+      cameraImage,
+      interpreter.address,
+      labels,
+      inputTensor.shape,
+      outputTensor.shape,
+    );
+
+    ReceivePort responsePort = ReceivePort();
+    isolateInference.sendPort.send(
+      isolateModel..responsePort = responsePort.sendPort,
+    );
+
+    final resultMap = await responsePort.first as Map<String, double>;
+    final results =
+        resultMap.entries.map((entry) {
+          final index = labels.indexOf(entry.key);
+          return ClassificationResultDto(index: index, score: entry.value);
+        }).toList();
+
+    results.sort((a, b) => b.score.compareTo(a.score));
+
+    return results;
+  }
+
+  Future<void> close() async {
+    await isolateInference.close();
   }
 }

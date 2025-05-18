@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:food_snap/theme/app_colors.dart';
+import 'package:food_snap/ui/camera_page.dart';
 import 'package:food_snap/ui/result_page.dart';
 import 'package:food_snap/viewmodels/home_viewmodel.dart';
 import 'package:food_snap/viewmodels/image_classification_viewmodel.dart';
@@ -66,6 +67,11 @@ class _HomePageState extends State<HomePage> {
             _ImagePreview(),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.primary,
+        onPressed: () => Navigator.pushNamed(context, CameraPage.route),
+        child: Icon(Icons.camera_rounded, color: Colors.white),
       ),
     );
   }
@@ -132,7 +138,7 @@ class _AnalyzeButton extends StatelessWidget {
         return AppButton(
           label: 'Analyze',
           onPressed: () async {
-            await classificationVM.runClassification(imagePath);
+            await classificationVM.runClassificationFromPath(imagePath);
             if (!context.mounted) return;
             Navigator.pushNamed(context, ResultPage.route);
           },
