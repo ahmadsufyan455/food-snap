@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
+import 'package:food_snap/utils/image_crop_helper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class HomeViewmodel extends ChangeNotifier {
   String? imagePath;
-  XFile? imageFile;
+  XFile? pickedFile;
 
   void _setImage(XFile? value) {
-    imageFile = value;
+    pickedFile = value;
     imagePath = value?.path;
     notifyListeners();
   }
@@ -14,16 +15,25 @@ class HomeViewmodel extends ChangeNotifier {
   void pickImage(ImageSource source) async {
     final picker = ImagePicker();
 
-    final pickedFile = await picker.pickImage(source: source);
+    pickedFile = await picker.pickImage(source: source);
+    _cropImage();
+  }
 
-    if (pickedFile != null) {
-      _setImage(pickedFile);
+  Future<void> _cropImage() async {
+    if (pickedFile == null) return;
+
+    final croppedPath = await ImageCropperHelper.cropImage(
+      imagePath: pickedFile!.path,
+    );
+
+    if (croppedPath != null) {
+      _setImage(XFile(croppedPath));
     }
   }
 
   void resetState() {
     imagePath = null;
-    imageFile = null;
+    pickedFile = null;
     notifyListeners();
   }
 }

@@ -53,19 +53,17 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 50),
               AppButton(
                 label: 'Take Photo',
-                onPressed:
-                    () => context.read<HomeViewmodel>().pickImage(
-                      ImageSource.camera,
-                    ),
+                onPressed: () {
+                  context.read<HomeViewmodel>().pickImage(ImageSource.camera);
+                },
                 icon: Icons.photo_camera_rounded,
               ),
               const SizedBox(height: 16),
               AppButton(
                 label: 'Upload From Gallery',
-                onPressed:
-                    () => context.read<HomeViewmodel>().pickImage(
-                      ImageSource.gallery,
-                    ),
+                onPressed: () {
+                  context.read<HomeViewmodel>().pickImage(ImageSource.gallery);
+                },
                 isOutline: true,
                 icon: Icons.image_search_rounded,
               ),
