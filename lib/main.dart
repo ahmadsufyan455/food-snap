@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_snap/services/gemini_service.dart';
 import 'package:food_snap/services/image_classification_service.dart';
 import 'package:food_snap/theme/app_colors.dart';
 import 'package:food_snap/ui/camera_page.dart';
@@ -7,6 +8,7 @@ import 'package:food_snap/ui/home_page.dart';
 import 'package:food_snap/ui/result_page.dart';
 import 'package:food_snap/viewmodels/home_viewmodel.dart';
 import 'package:food_snap/viewmodels/image_classification_viewmodel.dart';
+import 'package:food_snap/viewmodels/nutrition_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -21,6 +23,7 @@ class MainApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider(create: (_) => ImageClassificationService()),
+        Provider(create: (_) => GeminiService()),
         ChangeNotifierProvider(
           create:
               (context) => ImageClassificationViewmodel(
@@ -28,6 +31,10 @@ class MainApp extends StatelessWidget {
               ),
         ),
         ChangeNotifierProvider(create: (_) => HomeViewmodel()),
+        ChangeNotifierProvider(
+          create:
+              (context) => NutritionViewmodel(context.read<GeminiService>()),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
