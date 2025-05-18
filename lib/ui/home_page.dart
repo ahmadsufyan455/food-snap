@@ -6,6 +6,7 @@ import 'package:food_snap/ui/result_page.dart';
 import 'package:food_snap/viewmodels/home_viewmodel.dart';
 import 'package:food_snap/viewmodels/image_classification_viewmodel.dart';
 import 'package:food_snap/widgets/app_button.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -52,13 +53,19 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 50),
               AppButton(
                 label: 'Take Photo',
-                onPressed: () {},
+                onPressed:
+                    () => context.read<HomeViewmodel>().pickImage(
+                      ImageSource.camera,
+                    ),
                 icon: Icons.photo_camera_rounded,
               ),
               const SizedBox(height: 16),
               AppButton(
                 label: 'Upload From Gallery',
-                onPressed: () => context.read<HomeViewmodel>().openGallery(),
+                onPressed:
+                    () => context.read<HomeViewmodel>().pickImage(
+                      ImageSource.gallery,
+                    ),
                 isOutline: true,
                 icon: Icons.image_search_rounded,
               ),

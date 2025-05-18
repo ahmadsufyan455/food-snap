@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:food_snap/theme/app_colors.dart';
+import 'package:food_snap/ui/detail_page.dart';
 import 'package:food_snap/viewmodels/home_viewmodel.dart';
 import 'package:food_snap/viewmodels/image_classification_viewmodel.dart';
+import 'package:food_snap/widgets/app_button.dart';
 import 'package:provider/provider.dart';
 
 class ResultPage extends StatelessWidget {
@@ -44,20 +47,30 @@ class ResultPage extends StatelessWidget {
                         Text(
                           label,
                           style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primary,
                           ),
                         ),
                         SizedBox(height: 8),
                         Text(
-                          '(${(score * 100).toStringAsFixed(2)}%)',
-                          style: const TextStyle(fontSize: 18),
+                          '${(score * 100).toStringAsFixed(2)}%',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primary,
+                          ),
                         ),
                       ],
                     );
                   }
                   return SizedBox.shrink();
                 },
+              ),
+              const SizedBox(height: 24),
+              AppButton(
+                label: 'View Details',
+                onPressed: () => Navigator.pushNamed(context, DetailPage.route),
               ),
             ],
           ),

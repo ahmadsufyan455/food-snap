@@ -11,10 +11,10 @@ class HomeViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void openGallery() async {
+  void pickImage(ImageSource source) async {
     final picker = ImagePicker();
 
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: source);
 
     if (pickedFile != null) {
       _setImage(pickedFile);
