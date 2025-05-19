@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "81177816977",
+    "project_id": "food-snap-7613d",
+    "storage_bucket": "food-snap-7613d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:81177816977:android:2b4fa061094f5820ccf430",
+        "android_client_info": {
+          "package_name": "com.zerodev.foodsnap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPyEAQc_3GZP-YReNB0T-HGg3bKws57v8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
