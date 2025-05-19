@@ -82,7 +82,7 @@ packages:
     source: hosted
     version: "2.4.4"
   build_runner:
-    dependency: "direct main"
+    dependency: "direct dev"
     description:
       name: build_runner
       sha256: "058fe9dce1de7d69c4b84fada934df3e0153dd000758c4d65964d0166779aa99"
@@ -153,6 +153,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.5"
+  change_app_package_name:
+    dependency: "direct dev"
+    description:
+      name: change_app_package_name
+      sha256: "8e43b754fe960426904d77ed4c62fa8c9834deaf6e293ae40963fa447482c4c5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.0"
   characters:
     dependency: transitive
     description:
