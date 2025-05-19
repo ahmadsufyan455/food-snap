@@ -1,4 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:food_snap/firebase_options.dart';
+import 'package:food_snap/services/firebase_ml_service.dart';
 import 'package:food_snap/services/gemini_service.dart';
 import 'package:food_snap/services/image_classification_service.dart';
 import 'package:food_snap/theme/app_colors.dart';
@@ -11,7 +14,9 @@ import 'package:food_snap/viewmodels/image_classification_viewmodel.dart';
 import 'package:food_snap/viewmodels/nutrition_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MainApp());
 }
 
@@ -22,7 +27,14 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider(create: (_) => ImageClassificationService()),
+        Provider(create: (_) => FirebaseMlService()),
+        Provider(
+          create: (context) {
+            return ImageClassificationService(
+              context.read<FirebaseMlService>(),
+            );
+          },
+        ),
         Provider(create: (_) => GeminiService()),
         ChangeNotifierProvider(
           create:

@@ -1,15 +1,21 @@
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 import 'package:food_snap/dtos/classification_result_dto.dart';
+import 'package:food_snap/services/firebase_ml_service.dart';
 import 'package:food_snap/services/isolate_inference.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 class ImageClassificationService {
-  final modelPath = 'assets/model/vision-classifier-food-v1.tflite';
+  final FirebaseMlService _firebaseMlService;
+
+  ImageClassificationService(this._firebaseMlService);
+
   final labelsPath = 'assets/model/labels.txt';
 
+  late final File modelFile;
   late final Interpreter interpreter;
   late final List<String> labels;
   late Tensor inputTensor;
@@ -17,11 +23,12 @@ class ImageClassificationService {
   late final IsolateInference isolateInference;
 
   Future<void> _loadModel() async {
+    modelFile = await _firebaseMlService.loadModel();
     final options =
         InterpreterOptions()
           ..useNnApiForAndroid = true
           ..useMetalDelegateForIOS = true;
-    interpreter = await Interpreter.fromAsset(modelPath, options: options);
+    interpreter = Interpreter.fromFile(modelFile, options: options);
     inputTensor = interpreter.getInputTensor(0);
     outputTensor = interpreter.getOutputTensor(0);
   }
