@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:food_snap/theme/app_colors.dart';
-import 'package:food_snap/ui/detail_page.dart';
+import 'package:food_snap/ui/reference_page.dart';
 import 'package:food_snap/viewmodels/home_viewmodel.dart';
 import 'package:food_snap/viewmodels/image_classification_viewmodel.dart';
 import 'package:food_snap/viewmodels/nutrition_viewmodel.dart';
@@ -18,7 +18,8 @@ class ResultPage extends StatefulWidget {
 }
 
 class _ResultPageState extends State<ResultPage> {
-  @override
+  String foodName = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,8 +34,12 @@ class _ResultPageState extends State<ResultPage> {
             _buildClassificationResult(),
             const SizedBox(height: 24),
             AppButton(
-              label: 'View Details',
-              onPressed: () => Navigator.pushNamed(context, DetailPage.route),
+              label: 'View Reference',
+              onPressed: () => Navigator.pushNamed(
+                context,
+                ReferencePage.route,
+                arguments: {'foodName': foodName},
+              ),
             ),
             const SizedBox(height: 34),
             _buildNutritionSection(),
@@ -65,11 +70,13 @@ class _ResultPageState extends State<ResultPage> {
       builder: (_, viewModel, __) {
         final result = viewModel.classification;
         if (result == null) return const SizedBox.shrink();
+        foodName = result.label;
         WidgetsBinding.instance.addPostFrameCallback((_) {
           context.read<NutritionViewmodel>().generateNutritionFacts(
             foodName: result.label,
           );
         });
+
         return Column(
           children: [
             Text(
@@ -141,32 +148,31 @@ class _ResultPageState extends State<ResultPage> {
             };
 
             return Column(
-              children:
-                  data.entries.map((entry) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            entry.key,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                          Text(
-                            entry.value,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ],
+              children: data.entries.map((entry) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        entry.key,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: AppColors.primary,
+                        ),
                       ),
-                    );
-                  }).toList(),
+                      Text(
+                        entry.value,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
             );
           },
         ),
