@@ -50,7 +50,11 @@ class DatabaseService {
 
   Future<List<FoodTable>> getAllFoods() async {
     final db = await database;
-    final List<Map<String, dynamic>> result = await db!.query(_tableFood);
+    final List<Map<String, dynamic>> result = await db!.query(
+      _tableFood,
+      orderBy: 'id DESC',
+      limit: 5,
+    );
     return result.map((map) => FoodTable.fromMap(map)).toList();
   }
 
