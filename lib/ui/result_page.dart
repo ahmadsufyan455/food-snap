@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:food_snap/models/food_table.dart';
+import 'package:food_snap/services/database_service.dart';
 import 'package:food_snap/theme/app_colors.dart';
 import 'package:food_snap/ui/reference_page.dart';
+import 'package:food_snap/utils/app_ext.dart';
 import 'package:food_snap/viewmodels/home_viewmodel.dart';
 import 'package:food_snap/viewmodels/image_classification_viewmodel.dart';
 import 'package:food_snap/viewmodels/nutrition_viewmodel.dart';
@@ -41,6 +44,8 @@ class _ResultPageState extends State<ResultPage> {
                 arguments: {'foodName': foodName},
               ),
             ),
+            const SizedBox(height: 8),
+            _SaveResultButton(),
             const SizedBox(height: 34),
             _buildNutritionSection(),
           ],
@@ -177,6 +182,41 @@ class _ResultPageState extends State<ResultPage> {
           },
         ),
       ],
+    );
+  }
+}
+
+class _SaveResultButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AppButton(
+      label: 'Save Result',
+      isOutline: true,
+      onPressed: () async {
+        final classification = context
+            .read<ImageClassificationViewmodel>()
+            .classification;
+        final nutrition = context.read<NutritionViewmodel>().nutrition;
+
+        if (classification != null && nutrition != null) {
+          final food = FoodTable(
+            label: classification.label,
+            confidenceScore: classification.confidenceScore,
+            calories: nutrition.calories,
+            carbohydrates: nutrition.carbohydrates,
+            fat: nutrition.fat,
+            fiber: nutrition.fiber,
+            protein: nutrition.protein,
+          );
+
+          await DatabaseService().insertFood(food);
+
+          if (!context.mounted) return;
+          context.showSnakbar('Result saved!');
+        } else {
+          context.showSnakbar('Classification or Nutrition not available');
+        }
+      },
     );
   }
 }
