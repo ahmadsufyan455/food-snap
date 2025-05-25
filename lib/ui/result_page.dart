@@ -23,7 +23,7 @@ class _ResultPageState extends State<ResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text('Recognition Result')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
