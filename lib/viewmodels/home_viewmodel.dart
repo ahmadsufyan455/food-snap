@@ -21,6 +21,9 @@ class HomeViewmodel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  bool _isSaved = false;
+  bool get isSaved => _isSaved;
+
   void _setImage(XFile? value) {
     pickedFile = value;
     imagePath = value?.path;
@@ -50,6 +53,21 @@ class HomeViewmodel extends ChangeNotifier {
     imagePath = null;
     pickedFile = null;
     notifyListeners();
+  }
+
+  void resetSaveState() {
+    _isSaved = false;
+    notifyListeners();
+  }
+
+  Future<void> savedResult(FoodTable data) async {
+    try {
+      await _databaseService.insertFood(data);
+      _isSaved = true;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Failed to save result: $e');
+    }
   }
 
   Future<void> getRecents() async {

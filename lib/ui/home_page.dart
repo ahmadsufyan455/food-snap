@@ -92,7 +92,9 @@ class _ImagePreview extends StatelessWidget {
   Widget build(BuildContext context) => Consumer<HomeViewmodel>(
     builder: (_, homeVM, __) {
       final imagePath = homeVM.imagePath;
-      if (imagePath == null) {
+      if (imagePath == null ||
+          imagePath.isEmpty ||
+          !File(imagePath).existsSync()) {
         return const SizedBox.shrink();
       }
 
@@ -148,6 +150,7 @@ class _AnalyzeButton extends StatelessWidget {
           if (context.mounted) {
             Navigator.pushNamed(context, ResultPage.route).then((_) {
               if (context.mounted) {
+                context.read<HomeViewmodel>().resetSaveState();
                 context.read<HomeViewmodel>().getRecents();
               }
             });

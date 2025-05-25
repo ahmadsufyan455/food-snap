@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:food_snap/models/food_table.dart';
-import 'package:food_snap/services/database_service.dart';
 import 'package:food_snap/theme/app_colors.dart';
 import 'package:food_snap/ui/reference_page.dart';
 import 'package:food_snap/utils/app_ext.dart';
@@ -214,36 +213,43 @@ class _SaveResultButton extends StatelessWidget {
   const _SaveResultButton();
 
   @override
-  Widget build(BuildContext context) => AppButton(
-    label: 'Save Result',
-    isOutline: true,
-    onPressed: () async {
-      final classification = context
-          .read<ImageClassificationViewmodel>()
-          .classification;
-      final nutrition = context.read<NutritionViewmodel>().nutrition;
-      final path = context.read<HomeViewmodel>().imagePath;
+  Widget build(BuildContext context) {
+    final isSaved = context.watch<HomeViewmodel>().isSaved;
 
-      if (classification != null && nutrition != null && path != null) {
-        final food = FoodTable(
-          path: path,
-          label: classification.label,
-          confidenceScore: classification.confidenceScore,
-          calories: nutrition.calories,
-          carbohydrates: nutrition.carbohydrates,
-          fat: nutrition.fat,
-          fiber: nutrition.fiber,
-          protein: nutrition.protein,
-        );
+    return AppButton(
+      label: 'Save Result',
+      isOutline: true,
+      isEnabled: !isSaved,
+      onPressed: () async {
+        final classification = context
+            .read<ImageClassificationViewmodel>()
+            .classification;
+        final nutrition = context.read<NutritionViewmodel>().nutrition;
+        final path = context.read<HomeViewmodel>().imagePath;
 
-        await DatabaseService().insertFood(food);
+        if (classification != null && nutrition != null && path != null) {
+          final food = FoodTable(
+            path: path,
+            label: classification.label,
+            confidenceScore: classification.confidenceScore,
+            calories: nutrition.calories,
+            carbohydrates: nutrition.carbohydrates,
+            fat: nutrition.fat,
+            fiber: nutrition.fiber,
+            protein: nutrition.protein,
+          );
 
-        if (context.mounted) {
-          context.showSnakbar('Result saved!');
+          if (!isSaved) {
+            await context.read<HomeViewmodel>().savedResult(food);
+          }
+
+          if (context.mounted) {
+            context.showSnakbar('Result saved!');
+          }
+        } else {
+          context.showSnakbar('Classification or Nutrition not available');
         }
-      } else {
-        context.showSnakbar('Classification or Nutrition not available');
-      }
-    },
-  );
+      },
+    );
+  }
 }
