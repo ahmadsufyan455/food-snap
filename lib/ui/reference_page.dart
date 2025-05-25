@@ -115,6 +115,16 @@ class _ReferenceDraggableSheet extends StatelessWidget {
                       ),
                     ),
                   ),
+                  Center(
+                    child: Text(
+                      '(${data.category} - ${data.area})',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 16.0),
                   const Divider(color: AppColors.primary, thickness: 1),
                   const SizedBox(height: 8.0),

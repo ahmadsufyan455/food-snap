@@ -28,6 +28,8 @@ extension MealToModel on MealDto {
     if (meals != null) {
       return MealModel(
         name: meals?.first.strMeal ?? '',
+        category: meals?.first.strCategory ?? '',
+        area: meals?.first.strArea ?? '',
         image: meals?.first.strMealThumb ?? '',
         instructions: meals?.first.strInstructions ?? '',
         ingredients: [
