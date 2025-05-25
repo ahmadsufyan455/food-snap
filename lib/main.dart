@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:food_snap/firebase_options.dart';
+import 'package:food_snap/models/food_table.dart';
 import 'package:food_snap/services/api_service.dart';
 import 'package:food_snap/services/database_service.dart';
 import 'package:food_snap/services/firebase_ml_service.dart';
@@ -68,13 +69,16 @@ class MainApp extends StatelessWidget {
         routes: {
           HomePage.route: (context) => HomePage(),
           ReferencePage.route: (context) {
-            final args =
-                ModalRoute.of(context)?.settings.arguments
-                    as Map<String, dynamic>;
-            return ReferencePage(foodName: args['foodName']);
+            final foodName =
+                ModalRoute.of(context)?.settings.arguments as String;
+            return ReferencePage(foodName: foodName);
           },
           CameraPage.route: (context) => CameraPage(),
-          ResultPage.route: (context) => ResultPage(),
+          ResultPage.route: (context) {
+            final FoodTable? localData =
+                ModalRoute.of(context)?.settings.arguments as FoodTable?;
+            return ResultPage(localData: localData);
+          },
         },
       ),
     );

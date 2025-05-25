@@ -199,7 +199,16 @@ class _RecentFoods extends StatelessWidget {
               itemCount: data.foodRecents!.length,
               itemBuilder: (context, index) {
                 final recent = data.foodRecents![index];
-                return RecentItem(data: recent);
+                return RecentItem(
+                  data: recent,
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      ResultPage.route,
+                      arguments: recent,
+                    );
+                  },
+                );
               },
             ),
           ],
