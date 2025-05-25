@@ -14,8 +14,8 @@ import 'package:provider/provider.dart';
 
 class ResultPage extends StatefulWidget {
   static const String route = '/resultPage';
-  final FoodTable? localData;
-  const ResultPage({super.key, this.localData});
+  final int? foodId;
+  const ResultPage({super.key, this.foodId});
 
   @override
   State<ResultPage> createState() => _ResultPageState();
@@ -24,6 +24,18 @@ class ResultPage extends StatefulWidget {
 class _ResultPageState extends State<ResultPage> {
   String foodName = '';
   bool _nutritionFetched = false;
+
+  @override
+  void initState() {
+    if (widget.foodId != null) {
+      Future.microtask(() {
+        if (mounted) {
+          context.read<HomeViewmodel>().getRecentById(widget.foodId!);
+        }
+      });
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -39,7 +51,7 @@ class _ResultPageState extends State<ResultPage> {
           const SizedBox(height: 24),
           _buildReferenceButton(context),
           const SizedBox(height: 8),
-          if (widget.localData == null) const _SaveResultButton(),
+          if (widget.foodId == null) const _SaveResultButton(),
           const SizedBox(height: 34),
           _buildNutritionSection(context),
         ],
@@ -49,10 +61,11 @@ class _ResultPageState extends State<ResultPage> {
 
   Widget _buildImagePreview(BuildContext context) {
     final imagePath = context.watch<HomeViewmodel>().imagePath;
+    final localData = context.watch<HomeViewmodel>().selectedFood;
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
       child: Image.file(
-        File(widget.localData?.path ?? imagePath ?? ''),
+        File(localData?.path ?? imagePath ?? ''),
         fit: BoxFit.cover,
         height: 250,
       ),
@@ -60,12 +73,10 @@ class _ResultPageState extends State<ResultPage> {
   }
 
   Widget _buildClassificationResult(BuildContext context) {
-    if (widget.localData != null) {
-      foodName = widget.localData!.label!;
-      return _buildLabelWithScore(
-        widget.localData!.label!,
-        widget.localData!.confidenceScore!,
-      );
+    final localData = context.watch<HomeViewmodel>().selectedFood;
+    if (localData != null) {
+      foodName = localData.label!;
+      return _buildLabelWithScore(localData.label!, localData.confidenceScore!);
     }
 
     final result = context.watch<ImageClassificationViewmodel>().classification;
@@ -115,13 +126,14 @@ class _ResultPageState extends State<ResultPage> {
   );
 
   Widget _buildNutritionSection(BuildContext context) {
-    if (widget.localData != null) {
+    final localData = context.watch<HomeViewmodel>().selectedFood;
+    if (localData != null) {
       final data = {
-        'Calories': widget.localData!.calories!,
-        'Carbohydrates': widget.localData!.carbohydrates!,
-        'Fat': widget.localData!.fat!,
-        'Fiber': widget.localData!.fiber!,
-        'Protein': widget.localData!.protein!,
+        'Calories': localData.calories!,
+        'Carbohydrates': localData.carbohydrates!,
+        'Fat': localData.fat!,
+        'Fiber': localData.fiber!,
+        'Protein': localData.protein!,
       };
       return _buildNutritionTable(data);
     }

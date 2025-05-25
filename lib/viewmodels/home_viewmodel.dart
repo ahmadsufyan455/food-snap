@@ -15,6 +15,9 @@ class HomeViewmodel extends ChangeNotifier {
   List<FoodTable>? _foodRecents;
   List<FoodTable>? get foodRecents => _foodRecents;
 
+  FoodTable? _selectedFood;
+  FoodTable? get selectedFood => _selectedFood;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -61,6 +64,15 @@ class HomeViewmodel extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<void> getRecentById(int id) async {
+    try {
+      _selectedFood = await _databaseService.getFoodById(id);
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Failed to get food by ID $id: $e');
     }
   }
 }

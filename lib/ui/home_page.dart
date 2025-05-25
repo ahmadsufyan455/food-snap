@@ -199,7 +199,7 @@ class _RecentFoods extends StatelessWidget {
                   Navigator.pushNamed(
                     context,
                     ResultPage.route,
-                    arguments: recent,
+                    arguments: recent.id,
                   );
                 },
               );

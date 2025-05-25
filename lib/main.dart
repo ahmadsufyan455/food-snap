@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:food_snap/firebase_options.dart';
-import 'package:food_snap/models/food_table.dart';
 import 'package:food_snap/services/api_service.dart';
 import 'package:food_snap/services/database_service.dart';
 import 'package:food_snap/services/firebase_ml_service.dart';
@@ -29,54 +28,50 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MultiProvider(
-      providers: [
-        Provider(create: (_) => ApiService()),
-        Provider(create: (_) => DatabaseService()),
-        Provider(create: (_) => FirebaseMlService()),
-        Provider(
-          create: (context) => ImageClassificationService(
-              context.read<FirebaseMlService>(),
-            ),
-        ),
-        Provider(create: (_) => GeminiService()),
-        ChangeNotifierProvider(
-          create: (context) => ImageClassificationViewmodel(
-            context.read<ImageClassificationService>(),
-          ),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => HomeViewmodel(context.read<DatabaseService>()),
-        ),
-        ChangeNotifierProvider(
-          create: (context) =>
-              NutritionViewmodel(context.read<GeminiService>()),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => ReferenceViewmodel(context.read<ApiService>()),
-        ),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          useMaterial3: true,
-          scaffoldBackgroundColor: AppColors.secondary,
-          appBarTheme: const AppBarTheme(backgroundColor: Colors.transparent),
-        ),
-        initialRoute: HomePage.route,
-        routes: {
-          HomePage.route: (context) => const HomePage(),
-          ReferencePage.route: (context) {
-            final foodName =
-                ModalRoute.of(context)?.settings.arguments as String;
-            return ReferencePage(foodName: foodName);
-          },
-          CameraPage.route: (context) => const CameraPage(),
-          ResultPage.route: (context) {
-            final FoodTable? localData =
-                ModalRoute.of(context)?.settings.arguments as FoodTable?;
-            return ResultPage(localData: localData);
-          },
-        },
+    providers: [
+      Provider(create: (_) => ApiService()),
+      Provider(create: (_) => DatabaseService()),
+      Provider(create: (_) => FirebaseMlService()),
+      Provider(
+        create: (context) =>
+            ImageClassificationService(context.read<FirebaseMlService>()),
       ),
-    );
+      Provider(create: (_) => GeminiService()),
+      ChangeNotifierProvider(
+        create: (context) => ImageClassificationViewmodel(
+          context.read<ImageClassificationService>(),
+        ),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => HomeViewmodel(context.read<DatabaseService>()),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => NutritionViewmodel(context.read<GeminiService>()),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => ReferenceViewmodel(context.read<ApiService>()),
+      ),
+    ],
+    child: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        scaffoldBackgroundColor: AppColors.secondary,
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.transparent),
+      ),
+      initialRoute: HomePage.route,
+      routes: {
+        HomePage.route: (context) => const HomePage(),
+        ReferencePage.route: (context) {
+          final foodName = ModalRoute.of(context)?.settings.arguments as String;
+          return ReferencePage(foodName: foodName);
+        },
+        CameraPage.route: (context) => const CameraPage(),
+        ResultPage.route: (context) {
+          final foodId = ModalRoute.of(context)?.settings.arguments as int?;
+          return ResultPage(foodId: foodId);
+        },
+      },
+    ),
+  );
 }
