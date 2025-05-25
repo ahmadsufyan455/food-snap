@@ -10,15 +10,14 @@ class RecentItem extends StatelessWidget {
   const RecentItem({super.key, required this.data, required this.onTap});
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(8),
         margin: const EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppColors.primary, width: 1),
+          border: Border.all(color: AppColors.primary),
         ),
         child: Row(
           children: [
@@ -29,7 +28,7 @@ class RecentItem extends StatelessWidget {
             const SizedBox(width: 24),
             Text(
               data.label!,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.primary,
                 fontSize: 24,
                 fontWeight: FontWeight.w500,
@@ -39,5 +38,4 @@ class RecentItem extends StatelessWidget {
         ),
       ),
     );
-  }
 }

@@ -50,7 +50,7 @@ class ImageClassificationService {
     Uint8List? imageBytes,
     CameraImage? cameraImage,
   ) async {
-    var isolateModel = InferenceModel(
+    final isolateModel = InferenceModel(
       imageBytes,
       cameraImage,
       interpreter.address,
@@ -59,7 +59,7 @@ class ImageClassificationService {
       outputTensor.shape,
     );
 
-    ReceivePort responsePort = ReceivePort();
+    final ReceivePort responsePort = ReceivePort();
     isolateInference.sendPort.send(
       isolateModel..responsePort = responsePort.sendPort,
     );

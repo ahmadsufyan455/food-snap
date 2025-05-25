@@ -1,1 +1,33 @@
 include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    # Prefer const constructors and literals
+    prefer_const_constructors: true
+    prefer_const_literals_to_create_immutables: true
+    prefer_const_declarations: true
+
+    # Code readability and clarity
+    always_put_control_body_on_new_line: true
+    always_use_package_imports: true
+    avoid_classes_with_only_static_members: true
+    avoid_print: true
+    avoid_unnecessary_containers: true
+    prefer_final_locals: true
+    unnecessary_this: true
+    sort_child_properties_last: true
+    require_trailing_commas: true
+    prefer_single_quotes: true
+
+    # Best practices
+    avoid_returning_null_for_future: true
+    use_super_parameters: true
+    prefer_expression_function_bodies: true
+    no_leading_underscores_for_local_identifiers: true
+    avoid_field_initializers_in_const_classes: true
+
+    # Safety
+    avoid_empty_else: true
+    avoid_init_to_null: true
+    annotate_overrides: true
+    avoid_redundant_argument_values: true

@@ -8,7 +8,7 @@ import 'package:image/image.dart' as image_lib;
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 class IsolateInference {
-  static const String _debugName = "TFLITE_INFERENCE";
+  static const String _debugName = 'TFLITE_INFERENCE';
   final ReceivePort _receivePort = ReceivePort();
   late Isolate _isolate;
   late SendPort _sendPort;
@@ -43,12 +43,13 @@ class IsolateInference {
 
       final result = _runInference(input, output, address);
 
-      int maxScore = result.reduce((a, b) => a + b);
+      final int maxScore = result.reduce((a, b) => a + b);
       final keys = isolateModel.labels;
-      final values =
-          result.map((e) => e.toDouble() / maxScore.toDouble()).toList();
+      final values = result
+          .map((e) => e.toDouble() / maxScore.toDouble())
+          .toList();
 
-      var classification = Map.fromIterables(keys, values);
+      final classification = Map.fromIterables(keys, values);
       classification.removeWhere((key, value) => value == 0);
 
       isolateModel.responsePort.send(classification);
@@ -61,11 +62,12 @@ class IsolateInference {
     List<int> inputShape,
   ) async {
     image_lib.Image? img;
-    img =
-        cameraImage != null
-            ? ImageUtils.convertCameraImage(cameraImage)
-            : (imageBytes != null ? image_lib.decodeImage(imageBytes) : null);
-    if (img == null) throw Exception("Failed to decode image");
+    img = cameraImage != null
+        ? ImageUtils.convertCameraImage(cameraImage)
+        : (imageBytes != null ? image_lib.decodeImage(imageBytes) : null);
+    if (img == null) {
+      throw Exception('Failed to decode image');
+    }
 
     image_lib.Image imageInput = image_lib.copyResize(
       img,
@@ -95,7 +97,7 @@ class IsolateInference {
     List<List<int>> output,
     int interpreterAddress,
   ) {
-    Interpreter interpreter = Interpreter.fromAddress(interpreterAddress);
+    final Interpreter interpreter = Interpreter.fromAddress(interpreterAddress);
     interpreter.run(input, output);
     // Get first output tensor
     final result = output.first;

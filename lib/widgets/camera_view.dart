@@ -121,9 +121,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return _isCameraInitialized
+  Widget build(BuildContext context) => _isCameraInitialized
         ? CameraPreview(controller!)
         : const Center(child: CircularProgressIndicator());
-  }
 }

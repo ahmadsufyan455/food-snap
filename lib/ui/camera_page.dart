@@ -23,8 +23,7 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       body: ColoredBox(
         color: Colors.black,
         child: Center(
@@ -59,5 +58,4 @@ class _CameraPageState extends State<CameraPage> {
         ),
       ),
     );
-  }
 }

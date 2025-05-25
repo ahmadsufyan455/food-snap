@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:image/image.dart' as image_lib;
 
-class ImageUtils {
+sealed class ImageUtils {
   // Converts a [CameraImage] in YUV420 format to [imageLib.Image] in RGB format
   static image_lib.Image? convertCameraImage(CameraImage cameraImage) {
     final imageFormatGroup = cameraImage.format.group;
@@ -16,7 +16,7 @@ class ImageUtils {
 
   // Converts a [CameraImage] in BGRA888 format to [imageLib.Image] in RGB format
   static image_lib.Image convertBGRA8888ToImage(CameraImage cameraImage) {
-    image_lib.Image img = image_lib.Image.fromBytes(
+    final image_lib.Image img = image_lib.Image.fromBytes(
       width: cameraImage.planes[0].width!,
       height: cameraImage.planes[0].height!,
       bytes: cameraImage.planes[0].bytes.buffer,
@@ -42,10 +42,10 @@ class ImageUtils {
     final image = image_lib.Image(width: imageWidth, height: imageHeight);
 
     for (int h = 0; h < imageHeight; h++) {
-      int uvh = (h / 2).floor();
+      final int uvh = (h / 2).floor();
 
       for (int w = 0; w < imageWidth; w++) {
-        int uvw = (w / 2).floor();
+        final int uvw = (w / 2).floor();
 
         final yIndex = (h * yRowStride) + (w * yPixelStride);
 
@@ -96,9 +96,9 @@ class ImageUtils {
 
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        int yValue = nv21Bytes[y * width + x];
+        final int yValue = nv21Bytes[y * width + x];
 
-        var color = image.getColor(yValue, yValue, yValue);
+        final color = image.getColor(yValue, yValue, yValue);
         image.setPixel(x, y, color);
       }
     }

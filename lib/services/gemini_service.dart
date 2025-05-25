@@ -4,7 +4,7 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 class GeminiService {
   late final GenerativeModel model;
   GeminiService() {
-    final apiKey = Env.geminiApiKey;
+    const apiKey = Env.geminiApiKey;
     model = GenerativeModel(
       model: 'gemini-2.0-flash',
       apiKey: apiKey,
@@ -14,18 +14,18 @@ class GeminiService {
         responseSchema: Schema(
           SchemaType.object,
           requiredProperties: [
-            "calories",
-            "carbohydrates",
-            "fat",
-            "fiber",
-            "protein",
+            'calories',
+            'carbohydrates',
+            'fat',
+            'fiber',
+            'protein',
           ],
           properties: {
-            "calories": Schema(SchemaType.number),
-            "carbohydrates": Schema(SchemaType.number),
-            "fat": Schema(SchemaType.number),
-            "fiber": Schema(SchemaType.number),
-            "protein": Schema(SchemaType.number),
+            'calories': Schema(SchemaType.number),
+            'carbohydrates': Schema(SchemaType.number),
+            'fat': Schema(SchemaType.number),
+            'fiber': Schema(SchemaType.number),
+            'protein': Schema(SchemaType.number),
           },
         ),
       ),

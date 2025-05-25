@@ -11,17 +11,15 @@ class ClassificatioinItem extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: const EdgeInsets.all(8),
       color: Colors.white,
       child: Row(
         children: [
-          Text(item, style: TextStyle(fontSize: 18)),
+          Text(item, style: const TextStyle(fontSize: 18)),
           const Spacer(),
-          Text(value, style: TextStyle(fontSize: 18)),
+          Text(value, style: const TextStyle(fontSize: 18)),
         ],
       ),
     );
-  }
 }

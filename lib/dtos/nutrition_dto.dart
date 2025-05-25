@@ -15,25 +15,21 @@ class NutritionDto {
     required this.protein,
   });
 
-  factory NutritionDto.fromMap(Map<String, dynamic> map) {
-    return NutritionDto(
+  factory NutritionDto.fromMap(Map<String, dynamic> map) => NutritionDto(
       calories: (map['calories'] ?? 0).toDouble(),
       carbohydrates: (map['carbohydrates'] ?? 0).toDouble(),
       fat: (map['fat'] ?? 0).toDouble(),
       fiber: (map['fiber'] ?? 0).toDouble(),
       protein: (map['protein'] ?? 0).toDouble(),
     );
-  }
 
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String, dynamic> toMap() => {
       'calories': calories,
       'carbohydrates': carbohydrates,
       'fat': fat,
       'fiber': fiber,
       'protein': protein,
     };
-  }
 
   String toJson() => json.encode(toMap());
 

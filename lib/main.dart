@@ -28,18 +28,15 @@ class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
+  Widget build(BuildContext context) => MultiProvider(
       providers: [
         Provider(create: (_) => ApiService()),
         Provider(create: (_) => DatabaseService()),
         Provider(create: (_) => FirebaseMlService()),
         Provider(
-          create: (context) {
-            return ImageClassificationService(
+          create: (context) => ImageClassificationService(
               context.read<FirebaseMlService>(),
-            );
-          },
+            ),
         ),
         Provider(create: (_) => GeminiService()),
         ChangeNotifierProvider(
@@ -63,17 +60,17 @@ class MainApp extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
           scaffoldBackgroundColor: AppColors.secondary,
-          appBarTheme: AppBarTheme(backgroundColor: Colors.transparent),
+          appBarTheme: const AppBarTheme(backgroundColor: Colors.transparent),
         ),
         initialRoute: HomePage.route,
         routes: {
-          HomePage.route: (context) => HomePage(),
+          HomePage.route: (context) => const HomePage(),
           ReferencePage.route: (context) {
             final foodName =
                 ModalRoute.of(context)?.settings.arguments as String;
             return ReferencePage(foodName: foodName);
           },
-          CameraPage.route: (context) => CameraPage(),
+          CameraPage.route: (context) => const CameraPage(),
           ResultPage.route: (context) {
             final FoodTable? localData =
                 ModalRoute.of(context)?.settings.arguments as FoodTable?;
@@ -82,5 +79,4 @@ class MainApp extends StatelessWidget {
         },
       ),
     );
-  }
 }

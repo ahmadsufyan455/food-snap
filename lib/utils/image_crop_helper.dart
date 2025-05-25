@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:food_snap/theme/app_colors.dart';
 import 'package:image_cropper/image_cropper.dart';
 
-class ImageCropperHelper {
+sealed class ImageCropperHelper {
   static Future<String?> cropImage({required String imagePath}) async {
     final croppedFile = await ImageCropper().cropImage(
       sourcePath: imagePath,
-      compressFormat: ImageCompressFormat.jpg,
       compressQuality: 100,
       uiSettings: [
         AndroidUiSettings(

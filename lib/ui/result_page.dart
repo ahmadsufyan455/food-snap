@@ -26,28 +26,26 @@ class _ResultPageState extends State<ResultPage> {
   bool _nutritionFetched = false;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Recognition Result')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildImagePreview(context),
-            const SizedBox(height: 24),
-            _buildClassificationResult(context),
-            const SizedBox(height: 24),
-            _buildReferenceButton(context),
-            const SizedBox(height: 8),
-            if (widget.localData == null) const _SaveResultButton(),
-            const SizedBox(height: 34),
-            _buildNutritionSection(context),
-          ],
-        ),
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Recognition Result')),
+    body: SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildImagePreview(context),
+          const SizedBox(height: 24),
+          _buildClassificationResult(context),
+          const SizedBox(height: 24),
+          _buildReferenceButton(context),
+          const SizedBox(height: 8),
+          if (widget.localData == null) const _SaveResultButton(),
+          const SizedBox(height: 34),
+          _buildNutritionSection(context),
+        ],
       ),
-    );
-  }
+    ),
+  );
 
   Widget _buildImagePreview(BuildContext context) {
     final imagePath = context.watch<HomeViewmodel>().imagePath;
@@ -71,7 +69,9 @@ class _ResultPageState extends State<ResultPage> {
     }
 
     final result = context.watch<ImageClassificationViewmodel>().classification;
-    if (result == null) return const SizedBox.shrink();
+    if (result == null) {
+      return const SizedBox.shrink();
+    }
 
     foodName = result.label;
     if (!_nutritionFetched) {
@@ -86,40 +86,33 @@ class _ResultPageState extends State<ResultPage> {
     return _buildLabelWithScore(result.label, result.confidenceScore);
   }
 
-  Widget _buildLabelWithScore(String label, double score) {
-    return Column(
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.w600,
-            color: AppColors.primary,
-          ),
+  Widget _buildLabelWithScore(String label, double score) => Column(
+    children: [
+      Text(
+        label,
+        style: const TextStyle(
+          fontSize: 30,
+          fontWeight: FontWeight.w600,
+          color: AppColors.primary,
         ),
-        const SizedBox(height: 8),
-        Text(
-          '${(score * 100).toStringAsFixed(2)}%',
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-            color: AppColors.primary,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildReferenceButton(BuildContext context) {
-    return AppButton(
-      label: 'View Reference',
-      onPressed: () => Navigator.pushNamed(
-        context,
-        ReferencePage.route,
-        arguments: foodName,
       ),
-    );
-  }
+      const SizedBox(height: 8),
+      Text(
+        '${(score * 100).toStringAsFixed(2)}%',
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: AppColors.primary,
+        ),
+      ),
+    ],
+  );
+
+  Widget _buildReferenceButton(BuildContext context) => AppButton(
+    label: 'View Reference',
+    onPressed: () =>
+        Navigator.pushNamed(context, ReferencePage.route, arguments: foodName),
+  );
 
   Widget _buildNutritionSection(BuildContext context) {
     if (widget.localData != null) {
@@ -153,7 +146,9 @@ class _ResultPageState extends State<ResultPage> {
     }
 
     final nutrition = viewModel.nutrition;
-    if (nutrition == null) return const SizedBox.shrink();
+    if (nutrition == null) {
+      return const SizedBox.shrink();
+    }
 
     final data = {
       'Calories': nutrition.calories,
@@ -165,84 +160,78 @@ class _ResultPageState extends State<ResultPage> {
     return _buildNutritionTable(data);
   }
 
-  Widget _buildNutritionTable(Map<String, String> data) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Nutrition Facts / 100 g',
-          style: TextStyle(
-            color: AppColors.primary,
-            fontSize: 24,
-            fontWeight: FontWeight.w500,
+  Widget _buildNutritionTable(Map<String, String> data) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        'Nutrition Facts / 100 g',
+        style: TextStyle(
+          color: AppColors.primary,
+          fontSize: 24,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      const SizedBox(height: 24),
+      ...data.entries.map(
+        (entry) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                entry.key,
+                style: const TextStyle(fontSize: 16, color: AppColors.primary),
+              ),
+              Text(
+                entry.value,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 24),
-        ...data.entries.map(
-          (entry) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  entry.key,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: AppColors.primary,
-                  ),
-                ),
-                Text(
-                  entry.value,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
 }
 
 class _SaveResultButton extends StatelessWidget {
   const _SaveResultButton();
 
   @override
-  Widget build(BuildContext context) {
-    return AppButton(
-      label: 'Save Result',
-      isOutline: true,
-      onPressed: () async {
-        final classification = context
-            .read<ImageClassificationViewmodel>()
-            .classification;
-        final nutrition = context.read<NutritionViewmodel>().nutrition;
-        final path = context.read<HomeViewmodel>().imagePath;
+  Widget build(BuildContext context) => AppButton(
+    label: 'Save Result',
+    isOutline: true,
+    onPressed: () async {
+      final classification = context
+          .read<ImageClassificationViewmodel>()
+          .classification;
+      final nutrition = context.read<NutritionViewmodel>().nutrition;
+      final path = context.read<HomeViewmodel>().imagePath;
 
-        if (classification != null && nutrition != null && path != null) {
-          final food = FoodTable(
-            path: path,
-            label: classification.label,
-            confidenceScore: classification.confidenceScore,
-            calories: nutrition.calories,
-            carbohydrates: nutrition.carbohydrates,
-            fat: nutrition.fat,
-            fiber: nutrition.fiber,
-            protein: nutrition.protein,
-          );
+      if (classification != null && nutrition != null && path != null) {
+        final food = FoodTable(
+          path: path,
+          label: classification.label,
+          confidenceScore: classification.confidenceScore,
+          calories: nutrition.calories,
+          carbohydrates: nutrition.carbohydrates,
+          fat: nutrition.fat,
+          fiber: nutrition.fiber,
+          protein: nutrition.protein,
+        );
 
-          await DatabaseService().insertFood(food);
+        await DatabaseService().insertFood(food);
 
-          if (!context.mounted) return;
+        if (context.mounted) {
           context.showSnakbar('Result saved!');
-        } else {
-          context.showSnakbar('Classification or Nutrition not available');
         }
-      },
-    );
-  }
+      } else {
+        context.showSnakbar('Classification or Nutrition not available');
+      }
+    },
+  );
 }

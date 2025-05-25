@@ -25,8 +25,7 @@ class _ReferencePageState extends State<ReferencePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: const Text('Reference Food')),
       body: Consumer<ReferenceViewmodel>(
@@ -57,7 +56,6 @@ class _ReferencePageState extends State<ReferencePage> {
         },
       ),
     );
-  }
 }
 
 class _ReferenceImage extends StatelessWidget {
@@ -65,8 +63,7 @@ class _ReferenceImage extends StatelessWidget {
   const _ReferenceImage({required this.imageUrl});
 
   @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
+  Widget build(BuildContext context) => ClipRRect(
       child: Image.network(
         imageUrl,
         width: MediaQuery.sizeOf(context).width,
@@ -74,7 +71,6 @@ class _ReferenceImage extends StatelessWidget {
         fit: BoxFit.cover,
       ),
     );
-  }
 }
 
 class _ReferenceDraggableSheet extends StatelessWidget {
@@ -82,13 +78,10 @@ class _ReferenceDraggableSheet extends StatelessWidget {
   const _ReferenceDraggableSheet({required this.data});
 
   @override
-  Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
+  Widget build(BuildContext context) => DraggableScrollableSheet(
       initialChildSize: 0.7,
-      maxChildSize: 1,
       minChildSize: 0.7,
-      builder: (context, scrollController) {
-        return Container(
+      builder: (context, scrollController) => Container(
           decoration: const BoxDecoration(
             color: AppColors.secondary,
             borderRadius: BorderRadius.only(
@@ -149,16 +142,13 @@ class _ReferenceDraggableSheet extends StatelessWidget {
               ),
             ),
           ),
-        );
-      },
+        ),
     );
-  }
 }
 
 class _DragHandle extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Center(
+  Widget build(BuildContext context) => Center(
       child: Container(
         width: MediaQuery.of(context).size.width * 0.1,
         height: 5.0,
@@ -168,7 +158,6 @@ class _DragHandle extends StatelessWidget {
         ),
       ),
     );
-  }
 }
 
 class _SectionTitle extends StatelessWidget {
@@ -176,8 +165,7 @@ class _SectionTitle extends StatelessWidget {
   const _SectionTitle({required this.title});
 
   @override
-  Widget build(BuildContext context) {
-    return Text(
+  Widget build(BuildContext context) => Text(
       title,
       style: const TextStyle(
         color: AppColors.primary,
@@ -185,7 +173,6 @@ class _SectionTitle extends StatelessWidget {
         fontSize: 20,
       ),
     );
-  }
 }
 
 class _IngredientsList extends StatelessWidget {

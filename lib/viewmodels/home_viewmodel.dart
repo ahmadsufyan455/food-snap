@@ -32,14 +32,14 @@ class HomeViewmodel extends ChangeNotifier {
   }
 
   Future<void> _cropImage() async {
-    if (pickedFile == null) return;
+    if (pickedFile != null) {
+      final croppedPath = await ImageCropperHelper.cropImage(
+        imagePath: pickedFile!.path,
+      );
 
-    final croppedPath = await ImageCropperHelper.cropImage(
-      imagePath: pickedFile!.path,
-    );
-
-    if (croppedPath != null) {
-      _setImage(XFile(croppedPath));
+      if (croppedPath != null) {
+        _setImage(XFile(croppedPath));
+      }
     }
   }
 

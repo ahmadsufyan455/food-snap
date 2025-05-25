@@ -21,8 +21,7 @@ class FoodTable {
     this.protein,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String, dynamic> toMap() => {
       'id': id,
       'path': path,
       'label': label,
@@ -33,10 +32,8 @@ class FoodTable {
       'fiber': fiber,
       'protein': protein,
     };
-  }
 
-  factory FoodTable.fromMap(Map<String, dynamic> map) {
-    return FoodTable(
+  factory FoodTable.fromMap(Map<String, dynamic> map) => FoodTable(
       id: map['id'],
       path: map['path'],
       label: map['label'],
@@ -47,5 +44,4 @@ class FoodTable {
       fiber: map['fiber'],
       protein: map['protein'],
     );
-  }
 }

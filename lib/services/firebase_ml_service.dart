@@ -9,11 +9,7 @@ class FirebaseMlService {
       'food_recognition_model',
       FirebaseModelDownloadType.localModel,
       FirebaseModelDownloadConditions(
-        iosAllowsCellularAccess: true,
-        iosAllowsBackgroundDownloading: false,
-        androidChargingRequired: false,
-        androidWifiRequired: false,
-        androidDeviceIdleRequired: false,
+        
       ),
     );
     return model.file;
