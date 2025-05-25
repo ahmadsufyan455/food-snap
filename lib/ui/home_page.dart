@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:food_snap/theme/app_colors.dart';
 import 'package:food_snap/ui/camera_page.dart';
 import 'package:food_snap/ui/result_page.dart';
+import 'package:food_snap/utils/app_info.dart';
 import 'package:food_snap/viewmodels/home_viewmodel.dart';
 import 'package:food_snap/viewmodels/image_classification_viewmodel.dart';
 import 'package:food_snap/widgets/app_button.dart';
@@ -35,7 +36,7 @@ class _HomePageState extends State<HomePage> {
     appBar: AppBar(
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () => showAboutDialogInfo(context),
           icon: const Icon(
             Icons.info_outline_rounded,
             color: AppColors.primary,
