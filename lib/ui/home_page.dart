@@ -7,6 +7,7 @@ import 'package:food_snap/ui/result_page.dart';
 import 'package:food_snap/viewmodels/home_viewmodel.dart';
 import 'package:food_snap/viewmodels/image_classification_viewmodel.dart';
 import 'package:food_snap/widgets/app_button.dart';
+import 'package:food_snap/widgets/recent_item.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -20,9 +21,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
-  Widget build(BuildContext context) {
-    final homeViewmodel = context.read<HomeViewmodel>();
+  void initState() {
+    Future.microtask(() {
+      if (!mounted) return;
+      context.read<HomeViewmodel>().getRecents();
+    });
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -53,18 +61,21 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 50),
             AppButton(
               label: 'Take Photo',
-              onPressed: () => homeViewmodel.pickImage(ImageSource.camera),
+              onPressed: () =>
+                  context.read<HomeViewmodel>().pickImage(ImageSource.camera),
               icon: Icons.photo_camera_rounded,
             ),
             const SizedBox(height: 16),
             AppButton(
               label: 'Upload From Gallery',
-              onPressed: () => homeViewmodel.pickImage(ImageSource.gallery),
+              onPressed: () =>
+                  context.read<HomeViewmodel>().pickImage(ImageSource.gallery),
               isOutline: true,
               icon: Icons.image_search_rounded,
             ),
             const SizedBox(height: 30),
             _ImagePreview(),
+            _RecentFoods(),
           ],
         ),
       ),
@@ -107,6 +118,7 @@ class _ImagePreview extends StatelessWidget {
               fontSize: 18,
               icon: Icons.clear_rounded,
             ),
+            const SizedBox(height: 24),
           ],
         );
       },
@@ -140,11 +152,57 @@ class _AnalyzeButton extends StatelessWidget {
           onPressed: () async {
             await classificationVM.runClassificationFromFile(imagePath);
             if (!context.mounted) return;
-            Navigator.pushNamed(context, ResultPage.route);
+            Navigator.pushNamed(context, ResultPage.route).then((_) {
+              if (!context.mounted) return;
+              context.read<HomeViewmodel>().getRecents();
+            });
           },
           paddingSize: 8,
           fontSize: 18,
           icon: Icons.search_rounded,
+        );
+      },
+    );
+  }
+}
+
+class _RecentFoods extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<HomeViewmodel>(
+      builder: (_, data, _) {
+        if (data.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(color: AppColors.primary),
+          );
+        }
+
+        if (data.foodRecents == null || data.foodRecents!.isEmpty) {
+          return SizedBox.shrink();
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Recent Foods',
+              style: TextStyle(
+                fontSize: 24,
+                color: AppColors.primary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 8),
+            ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: data.foodRecents!.length,
+              itemBuilder: (context, index) {
+                final recent = data.foodRecents![index];
+                return RecentItem(data: recent);
+              },
+            ),
+          ],
         );
       },
     );

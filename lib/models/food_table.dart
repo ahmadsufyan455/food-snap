@@ -1,5 +1,6 @@
 class FoodTable {
   final int? id;
+  final String? path;
   final String? label;
   final double? confidenceScore;
   final String? calories;
@@ -10,6 +11,7 @@ class FoodTable {
 
   FoodTable({
     this.id,
+    this.path,
     this.label,
     this.confidenceScore,
     this.calories,
@@ -22,6 +24,7 @@ class FoodTable {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'path': path,
       'label': label,
       'confidenceScore': confidenceScore,
       'calories': calories,
@@ -35,6 +38,7 @@ class FoodTable {
   factory FoodTable.fromMap(Map<String, dynamic> map) {
     return FoodTable(
       id: map['id'],
+      path: map['path'],
       label: map['label'],
       confidenceScore: (map['confidenceScore'] as num).toDouble(),
       calories: map['calories'],
@@ -42,28 +46,6 @@ class FoodTable {
       fat: map['fat'],
       fiber: map['fiber'],
       protein: map['protein'],
-    );
-  }
-
-  FoodTable copyWith({
-    int? id,
-    String? label,
-    double? confidenceScore,
-    String? calories,
-    String? carbohydrates,
-    String? fat,
-    String? fiber,
-    String? protein,
-  }) {
-    return FoodTable(
-      id: id ?? this.id,
-      label: label ?? this.label,
-      confidenceScore: confidenceScore ?? this.confidenceScore,
-      calories: calories ?? this.calories,
-      carbohydrates: carbohydrates ?? this.carbohydrates,
-      fat: fat ?? this.fat,
-      fiber: fiber ?? this.fiber,
-      protein: protein ?? this.protein,
     );
   }
 }

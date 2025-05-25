@@ -1,10 +1,22 @@
 import 'package:flutter/foundation.dart';
+import 'package:food_snap/models/food_table.dart';
+import 'package:food_snap/services/database_service.dart';
 import 'package:food_snap/utils/image_crop_helper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class HomeViewmodel extends ChangeNotifier {
+  final DatabaseService _databaseService;
+
+  HomeViewmodel(this._databaseService);
+
   String? imagePath;
   XFile? pickedFile;
+
+  List<FoodTable>? _foodRecents;
+  List<FoodTable>? get foodRecents => _foodRecents;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   void _setImage(XFile? value) {
     pickedFile = value;
@@ -35,5 +47,20 @@ class HomeViewmodel extends ChangeNotifier {
     imagePath = null;
     pickedFile = null;
     notifyListeners();
+  }
+
+  Future<void> getRecents() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final recents = await _databaseService.getAllFoods();
+      _foodRecents = recents;
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }

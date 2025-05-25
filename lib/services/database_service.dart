@@ -27,6 +27,7 @@ class DatabaseService {
     await db.execute('''
     CREATE TABLE $_tableFood (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      path Text,
       label TEXT,
       confidenceScore REAL,
       calories TEXT,

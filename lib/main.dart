@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:food_snap/firebase_options.dart';
 import 'package:food_snap/services/api_service.dart';
+import 'package:food_snap/services/database_service.dart';
 import 'package:food_snap/services/firebase_ml_service.dart';
 import 'package:food_snap/services/gemini_service.dart';
 import 'package:food_snap/services/image_classification_service.dart';
@@ -30,6 +31,7 @@ class MainApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider(create: (_) => ApiService()),
+        Provider(create: (_) => DatabaseService()),
         Provider(create: (_) => FirebaseMlService()),
         Provider(
           create: (context) {
@@ -44,7 +46,9 @@ class MainApp extends StatelessWidget {
             context.read<ImageClassificationService>(),
           ),
         ),
-        ChangeNotifierProvider(create: (_) => HomeViewmodel()),
+        ChangeNotifierProvider(
+          create: (context) => HomeViewmodel(context.read<DatabaseService>()),
+        ),
         ChangeNotifierProvider(
           create: (context) =>
               NutritionViewmodel(context.read<GeminiService>()),

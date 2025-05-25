@@ -197,9 +197,11 @@ class _SaveResultButton extends StatelessWidget {
             .read<ImageClassificationViewmodel>()
             .classification;
         final nutrition = context.read<NutritionViewmodel>().nutrition;
+        final path = context.read<HomeViewmodel>().imagePath;
 
-        if (classification != null && nutrition != null) {
+        if (classification != null && nutrition != null && path != null) {
           final food = FoodTable(
+            path: path,
             label: classification.label,
             confidenceScore: classification.confidenceScore,
             calories: nutrition.calories,
